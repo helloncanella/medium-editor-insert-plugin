@@ -3,7 +3,7 @@ module.exports = function insertPeatsEditor(config) {
     throw new Error("medium-editor-insert-plugin runs only in a browser.")
   }
 
-  const {selector, addons, toolbar} = config
+  if(!config) config = {}
 
   var jQuery = require("jquery")
 
@@ -17,16 +17,16 @@ module.exports = function insertPeatsEditor(config) {
   require("jquery-sortable")
   require("blueimp-file-upload")
 
-  factory(jQuery, Handlebars, MediumEditor, addons)
+  factory(jQuery, Handlebars, MediumEditor, config.addons)
 
-  startEditor(selector, toolbar, jQuery, MediumEditor)
+  startEditor(config.selector, config.toolbar, jQuery, MediumEditor)
 }
 
 function startEditor(selector, toolbar, $, MediumEditor) {
-  var editor = new MediumEditor(selector, { toolbar })
+  var editor = new MediumEditor(selector, { toolbar: toolbar })
 
   $(selector).mediumInsert({
-    editor
+    editor: editor
   })
 }
 
