@@ -946,7 +946,8 @@ function core($, additionalAddons, window, document) {
 
   const addons = Object.assign(
     {},
-    { images: true, embeds: true },
+    // { images: true, embeds: true },
+    { images: true },
     addonsObject(additionalAddons)
   )
 
