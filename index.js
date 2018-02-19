@@ -21,10 +21,10 @@ module.exports = function insertPeatsEditor({
 
   factory(jQuery, Handlebars, MediumEditor, addons)
 
-  startEditor(selector, jQuery, MediumEditor)
+  startEditor(selector, toolbar, jQuery, MediumEditor)
 }
 
-function startEditor(selector, $, MediumEditor) {
+function startEditor(selector, toolbar, $, MediumEditor) {
   var editor = new MediumEditor(selector)
 
   $(selector).mediumInsert({
@@ -36,7 +36,7 @@ function startEditor(selector, $, MediumEditor) {
 function factory($, Handlebars, MediumEditor, addons) {
   templates.call(this, Handlebars)
 
-  videoAddon($, window, document)
+  // videoAddon($, window, document)
   imageAddon($, window, document, MediumEditor.util)
   initiateAddons(addons, $)
 
