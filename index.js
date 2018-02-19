@@ -1,11 +1,9 @@
-module.exports = function insertPeatsEditor({
-  selector,
-  addons,
-  toolbar
-} = {}) {
+module.exports = function insertPeatsEditor(config) {
   if (typeof window === "undefined") {
     throw new Error("medium-editor-insert-plugin runs only in a browser.")
   }
+
+  const {selector, addons, toolbar} = config
 
   var jQuery = require("jquery")
 
