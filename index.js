@@ -1,4 +1,8 @@
-module.exports = function insertPeatsEditor(selector, addons) {
+module.exports = function insertPeatsEditor({
+  selector,
+  addons,
+  toolbar
+} = {}) {
   if (typeof window === "undefined") {
     throw new Error("medium-editor-insert-plugin runs only in a browser.")
   }
@@ -24,7 +28,8 @@ function startEditor(selector, $, MediumEditor) {
   var editor = new MediumEditor(selector)
 
   $(selector).mediumInsert({
-    editor: editor
+    editor,
+    toolbar
   })
 }
 
@@ -36,7 +41,6 @@ function factory($, Handlebars, MediumEditor, addons) {
   initiateAddons(addons, $)
 
   core($, addons, window, document)
-
 }
 
 /*global MediumEditor*/
