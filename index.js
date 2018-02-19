@@ -25,18 +25,17 @@ module.exports = function insertPeatsEditor({
 }
 
 function startEditor(selector, toolbar, $, MediumEditor) {
-  var editor = new MediumEditor(selector)
+  var editor = new MediumEditor(selector, { toolbar })
 
   $(selector).mediumInsert({
-    editor,
-    toolbar
+    editor
   })
 }
 
 function factory($, Handlebars, MediumEditor, addons) {
   templates.call(this, Handlebars)
 
-  // videoAddon($, window, document)
+  videoAddon($, window, document)
   imageAddon($, window, document, MediumEditor.util)
   initiateAddons(addons, $)
 
@@ -946,8 +945,7 @@ function core($, additionalAddons, window, document) {
 
   const addons = Object.assign(
     {},
-    // { images: true, embeds: true },
-    { images: true },
+    { images: true, embeds: true },
     addonsObject(additionalAddons)
   )
 
