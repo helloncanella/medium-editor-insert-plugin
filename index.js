@@ -31,12 +31,12 @@ function startEditor(selector, $, MediumEditor) {
 function factory($, Handlebars, MediumEditor, addons) {
   templates.call(this, Handlebars)
 
-  core($, addons, window, document)
-
   videoAddon($, window, document)
   imageAddon($, window, document, MediumEditor.util)
-
   initiateAddons(addons, $)
+
+  core($, addons, window, document)
+
 }
 
 /*global MediumEditor*/
