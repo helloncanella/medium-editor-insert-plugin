@@ -932,7 +932,7 @@ function addonsObject(addons) {
 function initiateAddons(addons, jQuery) {
   if (addons && addons.length) {
     for (var i = 0; i < addons.length; i++) {
-      addons.source(jQuery, window, document)
+      addons[i].source(jQuery, window, document)
     }
   }
 }
