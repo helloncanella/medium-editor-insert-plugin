@@ -3,7 +3,7 @@ module.exports = function insertPeatsEditor(config) {
     throw new Error("medium-editor-insert-plugin runs only in a browser.")
   }
 
-  if(!config) config = {}
+  if (!config) config = {}
 
   var jQuery = require("jquery")
 
@@ -17,7 +17,7 @@ module.exports = function insertPeatsEditor(config) {
   require("jquery-sortable")
   require("blueimp-file-upload")
 
-  factory(jQuery, Handlebars, MediumEditor, config.addons)
+  factory(jQuery, Handlebars, config.addons)
 
   startEditor(config.selector, config.toolbar, jQuery, MediumEditor)
 }
@@ -25,16 +25,21 @@ module.exports = function insertPeatsEditor(config) {
 function startEditor(selector, toolbar, $, MediumEditor) {
   var editor = new MediumEditor(selector, { toolbar: toolbar })
 
+  window.editor = editor
+
+  // editor.subscribe("editableInput", function(event, editable) {
+
+  // })
+
   $(selector).mediumInsert({
     editor: editor
   })
 }
 
-function factory($, Handlebars, MediumEditor, addons) {
+function factory($, Handlebars, addons) {
   templates.call(this, Handlebars)
 
   videoAddon($, window, document)
-  imageAddon($, window, document, MediumEditor.util)
   initiateAddons(addons, $)
 
   core($, addons, window, document)
@@ -54,6 +59,7 @@ function imageAddon($, window, document, Util) {
       preview: true,
       captions: true,
       captionPlaceholder: "Type caption for image (optional)",
+      altInputPlaceholder: "Insert alt",
       autoGrid: 3,
       fileUploadOptions: {
         // See https://github.com/blueimp/jQuery-File-Upload/wiki/Options
@@ -520,7 +526,8 @@ function imageAddon($, window, document, Util) {
 
   Images.prototype.selectImage = function(e) {
     var that = this,
-      $image
+      $image,
+      $imageContainer
 
     if (this.core.options.enabled) {
       $image = $(e.target)
@@ -537,13 +544,35 @@ function imageAddon($, window, document, Util) {
         that.addToolbar()
 
         if (that.options.captions) {
-          that.core.addCaption(
-            $image.closest("figure"),
-            that.options.captionPlaceholder
-          )
+          $imageContainer = $image.closest("figure")
+
+          that.core.addCaption($imageContainer, that.options.captionPlaceholder)
+
+          that.addAltInput($imageContainer, that.options.altInputPlaceholder)
         }
       }, 50)
     }
+  }
+
+  Images.prototype.addAltInput = function($imageContainer, placeholder) {
+    var $altInput = $("<input />")
+      .attr("placeholder", placeholder)
+      .attr("class", "alt-input")
+      .css({
+        background: "black",
+        opacity: 0.5,
+        color: "white",
+        position: "absolute",
+        left: "10px",
+        bottom: "10px",
+        height: "45px",
+        borderRadius: "15"
+      })
+      .on("change", function onChange(e) {
+        console.log(e.target.value)
+      })
+
+    $imageContainer.css("position", "relative").append($altInput)
   }
 
   /**
@@ -556,6 +585,7 @@ function imageAddon($, window, document, Util) {
   Images.prototype.unselectImage = function(e) {
     var $el = $(e.target),
       $image = this.$el.find(".medium-insert-image-active")
+    $image.find("alt-input")
 
     if ($el.is("img") && $el.hasClass("medium-insert-image-active")) {
       $image.not($el).removeClass("medium-insert-image-active")
@@ -943,7 +973,7 @@ function core($, additionalAddons, window, document) {
 
   const addons = Object.assign(
     {},
-    { images: true, embeds: true },
+    { embeds: true },
     addonsObject(additionalAddons)
   )
 
