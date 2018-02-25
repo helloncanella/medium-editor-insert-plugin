@@ -7,8 +7,10 @@ module.exports = function insertPeatsEditor(config) {
 
   var jQuery = require("jquery")
 
+  window.jQuery = jQuery
+  
   //Avoiding error related to $.fn.fileupoad
-  window.jQuery = window.$ = jQuery
+  window.$ = jQuery
 
   Handlebars = require("handlebars/runtime")
   MediumEditor = require("medium-editor")
