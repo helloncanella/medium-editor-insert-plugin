@@ -34,6 +34,7 @@
     "medium-editor": "^5.15.0",
     "handlebars": "~4.0.0",
     "blueimp-file-upload": "^9.20.0",
-    "jquery-sortable": "~0.9.12"
+    "jquery-sortable": "~0.9.12",
+    "uniqid": "^4.1.1"
   }
 }

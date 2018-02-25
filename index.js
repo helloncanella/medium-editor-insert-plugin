@@ -17,7 +17,7 @@ module.exports = function insertPeatsEditor(config) {
   require("jquery-sortable")
   require("blueimp-file-upload")
 
-  const mediumInsertId = "medium-insert-id"
+  const mediumInsertId = config.mediumInsertId || "medium-insert-id"
 
   factory(jQuery, Handlebars, config.addons, mediumInsertId)
 
@@ -40,15 +40,17 @@ function startEditor(
   onChangeContent
 ) {
   var editor = new MediumEditor(selector, { toolbar: toolbar })
-  var parser = new DOMParser()
-  editor.subscribe("editableInput", function onEdit(event, editable) {
-    const clonned = editable.cloneNode(true)
 
-    const mediumInsertNode = clonned.querySelector(`#${mediumInsertId}`)
-    mediumInsertNode.parentNode.removeChild(mediumInsertNode)
+  if (onChangeContent) {
+    editor.subscribe("editableInput", function onEdit(event, editable) {
+      const clonned = editable.cloneNode(true)
 
-    onChangeContent && onChangeContent(clonned.innerHTML)
-  })
+      const mediumInsertNode = clonned.querySelector(`#${mediumInsertId}`)
+      mediumInsertNode.parentNode.removeChild(mediumInsertNode)
+
+      onChangeContent(clonned.innerHTML)
+    })
+  }
 
   $(selector).mediumInsert({
     editor: editor
