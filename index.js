@@ -17,27 +17,46 @@ module.exports = function insertPeatsEditor(config) {
   require("jquery-sortable")
   require("blueimp-file-upload")
 
-  factory(jQuery, Handlebars, config.addons)
+  const mediumInsertId = "medium-insert-id"
 
-  startEditor(config.selector, config.toolbar, jQuery, MediumEditor)
+  factory(jQuery, Handlebars, config.addons, mediumInsertId)
+
+  startEditor(
+    config.selector,
+    config.toolbar,
+    jQuery,
+    MediumEditor,
+    mediumInsertId,
+    config.onChangeContent
+  )
 }
 
-function startEditor(selector, toolbar, $, MediumEditor) {
+function startEditor(
+  selector,
+  toolbar,
+  $,
+  MediumEditor,
+  mediumInsertId,
+  onChangeContent
+) {
   var editor = new MediumEditor(selector, { toolbar: toolbar })
+  var parser = new DOMParser()
+  editor.subscribe("editableInput", function onEdit(event, editable) {
+    const clonned = editable.cloneNode(true)
 
-  window.editor = editor
+    const mediumInsertNode = clonned.querySelector(`#${mediumInsertId}`)
+    mediumInsertNode.parentNode.removeChild(mediumInsertNode)
 
-  // editor.subscribe("editableInput", function(event, editable) {
-
-  // })
+    onChangeContent && onChangeContent(clonned.innerHTML)
+  })
 
   $(selector).mediumInsert({
     editor: editor
   })
 }
 
-function factory($, Handlebars, addons) {
-  templates.call(this, Handlebars)
+function factory($, Handlebars, addons, mediumInsertId) {
+  templates.call(this, Handlebars, mediumInsertId)
 
   videoAddon($, window, document)
   initiateAddons(addons, $)
@@ -1727,7 +1746,7 @@ function core($, additionalAddons, window, document) {
   }
 }
 
-function templates(Handlebars) {
+function templates(Handlebars, containerId) {
   this["MediumInsert"] = this["MediumInsert"] || {}
   this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {}
 
@@ -1778,8 +1797,12 @@ function templates(Handlebars) {
     main: function(container, depth0, helpers, partials, data) {
       var stack1
 
+      const id = containerId
+
       return (
-        '<div class="medium-insert-buttons" contenteditable="false" style="display: none">\n    <button class="medium-insert-buttons-show" type="button"><span>+</span></button>\n    <ul class="medium-insert-buttons-addons" style="display: none">\n' +
+        '<div class="medium-insert-buttons" id="' +
+        containerId +
+        '" contenteditable="false" style="display: none">\n    <button class="medium-insert-buttons-show" type="button"><span>+</span></button>\n    <ul class="medium-insert-buttons-addons" style="display: none">\n' +
         ((stack1 = helpers.each.call(
           depth0 != null ? depth0 : {},
           depth0 != null ? depth0.addons : depth0,
