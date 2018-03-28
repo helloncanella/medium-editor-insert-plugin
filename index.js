@@ -79,7 +79,7 @@ function initiateAddons(addons, jQuery) {
 }
 
 function core($, additionalAddons, window, document) {
-  "use strict"
+  // "use strict"
 
   const addons = Object.assign(
     {},
@@ -1369,7 +1369,7 @@ function templates(Handlebars, containerId) {
 }
 
 function videoAddon($, window, document) {
-  "use strict"
+  // "use strict"
 
   /** Default values */
   var pluginName = "mediumInsert",
